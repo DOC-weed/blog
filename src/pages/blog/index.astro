@@ -5,10 +5,13 @@ import Footer from '../../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
+import type { Post } from '../../types';
+import BlogList from '../../components/blog/Grid.astro';
+import '../../styles/tailwind.css';
+const posts = await fetch(
+	'https://wordpress-749572-5061863.cloudwaysapps.com/wp-json/miapi/v1/posts'
+).then((res) => res.json());
 
-const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
 ---
 
 <!doctype html>
@@ -84,25 +87,27 @@ const posts = (await getCollection('blog')).sort(
 				}
 			}
 		</style>
+		
 	</head>
 	<body>
 		<Header />
 		<main>
 			<section>
+				<BlogList posts={posts} />
 				<ul>
-					{
-						posts.map((post) => (
+					{/* 
+						posts.map((post:Post) => (
 							<li>
-								<a href={`/blog/${post.id}/`}>
-									<img width={720} height={360} src={post.data.heroImage} alt="" />
-									<h4 class="title">{post.data.title}</h4>
+								<a href={`/blog/${post.slug}/`}>
+									<img width={720} height={360} src={post.image} alt="" />
+									<h4 class="title">{post.title}</h4>
 									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
+										<FormattedDate date={new Date(post.publish_date)} />
 									</p>
 								</a>
 							</li>
 						))
-					}
+					*/}
 				</ul>
 			</section>
 		</main>
